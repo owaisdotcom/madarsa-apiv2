@@ -4,7 +4,9 @@ import {
   getStudent,
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
+  activateStudent,
+  deactivateStudent
 } from '../controllers/studentController.js';
 import { body } from 'express-validator';
 
@@ -28,5 +30,11 @@ router.route('/:id')
   .get(getStudent)
   .put(validateStudent, updateStudent)
   .delete(deleteStudent);
+
+router.route('/:id/activate')
+  .patch(activateStudent);
+
+router.route('/:id/deactivate')
+  .patch(deactivateStudent);
 
 export default router;

@@ -248,7 +248,16 @@ export const getGroupReminderLink = async (month, year) => {
 
     const reminderMessage = generateGroupReminderMessage(result.reminders, month, year);
     const groupLink = getWhatsAppGroupLink();
+    
+    if (!groupLink) {
+      return { success: false, error: 'WhatsApp group link not configured' };
+    }
+    
     const link = generateWhatsAppGroupLink(groupLink, reminderMessage);
+    
+    if (!link) {
+      return { success: false, error: 'Failed to generate WhatsApp group link' };
+    }
 
     return {
       success: true,
@@ -258,7 +267,7 @@ export const getGroupReminderLink = async (month, year) => {
     };
   } catch (error) {
     console.error('Error generating group reminder link:', error);
-    return { success: false, error: error.message };
+    return { success: false, error: error.message || 'Unknown error occurred' };
   }
 };
 

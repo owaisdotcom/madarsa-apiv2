@@ -100,16 +100,12 @@ export const updateStudent = async (req, res, next) => {
   }
 };
 
-// @desc    Delete student
+// @desc    Delete student (permanently)
 // @route   DELETE /api/students/:id
 // @access  Public
 export const deleteStudent = async (req, res, next) => {
   try {
-    const student = await Student.findByIdAndUpdate(
-      req.params.id,
-      { isActive: false },
-      { new: true }
-    );
+    const student = await Student.findByIdAndDelete(req.params.id);
 
     if (!student) {
       return res.status(404).json({
@@ -121,6 +117,60 @@ export const deleteStudent = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: {}
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Activate student
+// @route   PATCH /api/students/:id/activate
+// @access  Public
+export const activateStudent = async (req, res, next) => {
+  try {
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      { isActive: true },
+      { new: true, runValidators: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        error: 'Student not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: student
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Deactivate student
+// @route   PATCH /api/students/:id/deactivate
+// @access  Public
+export const deactivateStudent = async (req, res, next) => {
+  try {
+    const student = await Student.findByIdAndUpdate(
+      req.params.id,
+      { isActive: false },
+      { new: true, runValidators: true }
+    );
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        error: 'Student not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: student
     });
   } catch (error) {
     next(error);

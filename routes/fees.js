@@ -4,7 +4,9 @@ import {
   getFee,
   getStudentFees,
   createFee,
-  getMonthlyFees
+  getMonthlyFees,
+  updateFee,
+  deleteFee
 } from '../controllers/feeController.js';
 import { body } from 'express-validator';
 
@@ -29,6 +31,8 @@ router.route('/student/:studentId')
   .get(getStudentFees);
 
 router.route('/:id')
-  .get(getFee);
+  .get(getFee)
+  .put(validateFee, updateFee)
+  .delete(deleteFee);
 
 export default router;

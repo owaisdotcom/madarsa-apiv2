@@ -178,3 +178,56 @@ export const getMonthlyFees = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Update fee payment
+// @route   PUT /api/fees/:id
+// @access  Public
+export const updateFee = async (req, res, next) => {
+  try {
+    const fee = await Fee.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    ).populate('studentId', 'fullName phone flatName flatNo');
+
+    if (!fee) {
+      return res.status(404).json({
+        success: false,
+        error: 'Fee record not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: fee
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete fee payment
+// @route   DELETE /api/fees/:id
+// @access  Public
+export const deleteFee = async (req, res, next) => {
+  try {
+    const fee = await Fee.findByIdAndDelete(req.params.id);
+
+    if (!fee) {
+      return res.status(404).json({
+        success: false,
+        error: 'Fee record not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {}
+    });
+  } catch (error) {
+    next(error);
+  }
+};
